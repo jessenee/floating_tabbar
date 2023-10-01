@@ -68,9 +68,19 @@ class TopTabbarState extends State<TopTabbar> with SingleTickerProviderStateMixi
   void initState() {
     categories = getCategoryList();
     controller = TabController(length: categories.length, vsync: this, initialIndex: widget.initialIndex);
+    controller!.addListener(_onItemTap);
     getTabs(categories.length);
 
     super.initState();
+  }
+
+  void _onItemTap() {
+    if(!controller!.indexIsChanging) {
+      return;
+    }
+    if (widget.children[controller!.index].onTap != null) {
+      widget.children[controller!.index].onTap!();
+    }
   }
 
   List<String> getCategoryList() {

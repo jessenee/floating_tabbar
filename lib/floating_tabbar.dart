@@ -134,6 +134,9 @@ class FloatingTabBarState extends State<FloatingTabBar> {
       _selectedIndex = index;
       floatingTabBarPageViewController.animateToPage(index, duration: const Duration(milliseconds: 400), curve: Curves.ease);
     });
+    if (widget.children[index].onTap != null) {
+      widget.children[index].onTap!();
+    }
   }
 
   Widget floatingActionButtonBar() {
