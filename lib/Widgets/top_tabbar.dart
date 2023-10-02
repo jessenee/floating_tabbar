@@ -29,7 +29,7 @@ class TopTabbar extends StatefulWidget {
   TopTabbarState createState() => TopTabbarState();
 }
 
-class TopTabbarState extends State<TopTabbar> with SingleTickerProviderStateMixin {
+class TopTabbarState extends State<TopTabbar> with TickerProviderStateMixin {
   List<String> getLabelList() {
     List<String> labelList = [];
     for (var element in widget.children) {
@@ -66,10 +66,7 @@ class TopTabbarState extends State<TopTabbar> with SingleTickerProviderStateMixi
 
   @override
   void initState() {
-    categories = getCategoryList();
-    controller = TabController(length: categories.length, vsync: this, initialIndex: widget.initialIndex);
-    controller!.addListener(_onItemTap);
-    getTabs(categories.length);
+
 
     super.initState();
   }
@@ -106,8 +103,28 @@ class TopTabbarState extends State<TopTabbar> with SingleTickerProviderStateMixi
     );
   }
 
+  _updateController() {
+    categories = getCategoryList();
+    getTabs(categories.length);
+
+    if (controller == null) {
+      controller = TabController(length: categories.length,
+          vsync: this,
+          initialIndex: widget.initialIndex);
+      controller!.addListener(_onItemTap);
+    }
+    else if (controller!.length != categories.length) {
+      controller?.dispose();
+      controller = TabController(length: categories.length,
+          vsync: this,
+          initialIndex: widget.initialIndex);
+      controller!.addListener(_onItemTap);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _updateController();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
