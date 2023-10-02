@@ -50,6 +50,8 @@ class FloatingTabBar extends StatefulWidget {
   /// Minimum extension width for NavigationRail which is used in large screens.
   final double? minExtendedWidth;
 
+  final int selectedIndex;
+
   const FloatingTabBar({
     Key? key,
     required this.children,
@@ -66,13 +68,14 @@ class FloatingTabBar extends StatefulWidget {
     this.showTabLabelsForNonFloating = false,
     this.showTabLabelsForFloating = false,
     this.nauticsFooter,
+    this.selectedIndex = 0,
   }) : super(key: key);
   @override
   FloatingTabBarState createState() => FloatingTabBarState();
 }
 
 class FloatingTabBarState extends State<FloatingTabBar> {
-  PageController floatingTabBarPageViewController = PageController(initialPage: 0);
+  late PageController floatingTabBarPageViewController;
   final ValueNotifier<double> expandProgress = ValueNotifier(76);
   bool isExtended = false;
   int _selectedIndex = 0;
@@ -311,6 +314,13 @@ class FloatingTabBarState extends State<FloatingTabBar> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    _selectedIndex = super.widget.selectedIndex;
+    floatingTabBarPageViewController = PageController(initialPage: _selectedIndex);
+    super.initState();
   }
 
   @override
